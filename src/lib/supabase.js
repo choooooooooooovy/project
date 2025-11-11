@@ -1,16 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || import.meta.env.SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.SUPABASE_ANON_KEY
+const supabaseUrl = 'https://tbasgihsryuxotrpyrsz.supabase.co'
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRiYXNnaWhzcnl1eG90cnB5cnN6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NDIxMTgsImV4cCI6MjA3ODMxODExOH0.CmXja3H1rc6oMZxUSaqxIWkM3SbUGIC-xfzvXENJ_X0'
 
-let supabase
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('请在 .env 文件中配置 SUPABASE_URL 和 SUPABASE_ANON_KEY')
-  // 创建一个空的客户端，避免应用崩溃
-  supabase = null
-} else {
-  supabase = createClient(supabaseUrl, supabaseAnonKey)
-}
-
-export { supabase }
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
