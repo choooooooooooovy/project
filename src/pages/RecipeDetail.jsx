@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getRecipeById, likeRecipe } from '../services/recipeService'
 import { addComment } from '../services/commentService'
+import { addFavorite, removeFavorite, isFavorited } from '../services/favoriteService'
 import '../styles/RecipeDetail.css'
 
 export default function RecipeDetail() {
@@ -12,6 +13,7 @@ export default function RecipeDetail() {
   const [commentContent, setCommentContent] = useState('')
   const [commentRating, setCommentRating] = useState(5)
   const [submitting, setSubmitting] = useState(false)
+  const [favorited, setFavorited] = useState(false)
 
   // 模拟用户ID（实际项目中应该从认证系统获取）
   const currentUserId = 'a5d0ab11-2cdb-4505-abd7-db3383efb14d'
@@ -19,6 +21,7 @@ export default function RecipeDetail() {
 
   useEffect(() => {
     loadRecipe()
+    checkFavorite()
   }, [id])
 
   async function loadRecipe() {
@@ -44,6 +47,34 @@ export default function RecipeDetail() {
       }))
     } catch (error) {
       console.error('点赞失败:', error)
+      alert('点赞失败，请重试')
+    }
+  }
+
+  async function checkFavorite() {
+    try {
+      const ok = await isFavorited(currentUserId, id)
+      setFavorited(ok)
+    } catch (e) {
+      // 无收藏记录时会返回 PGRST116，不提示
+      setFavorited(false)
+    }
+  }
+
+  async function toggleFavorite() {
+    try {
+      if (favorited) {
+        await removeFavorite(currentUserId, id)
+        setFavorited(false)
+        alert('已取消收藏')
+      } else {
+        await addFavorite(currentUserId, id)
+        setFavorited(true)
+        alert('已加入收藏')
+      }
+    } catch (error) {
+      console.error('收藏操作失败:', error)
+      alert('收藏操作失败，请重试')
     }
   }
 
@@ -170,8 +201,8 @@ export default function RecipeDetail() {
               <button className="btn btn-primary" onClick={handleLike}>
                 ❤️ 点赞 ({recipe.likes_count || 0})
               </button>
-              <button className="btn btn-secondary">
-                ⭐ 收藏
+              <button className="btn btn-secondary" onClick={toggleFavorite}>
+                {favorited ? '⭐ 已收藏' : '☆ 收藏'}
               </button>
               <span className="views">👁️ {recipe.views_count || 0} 次浏览</span>
             </div>
