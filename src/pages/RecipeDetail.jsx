@@ -14,7 +14,7 @@ export default function RecipeDetail() {
   const [submitting, setSubmitting] = useState(false)
 
   // 模拟用户ID（实际项目中应该从认证系统获取）
-  const currentUserId = 'demo-user-id'
+  const currentUserId = 'a5d0ab11-2cdb-4505-abd7-db3383efb14d'
   const currentUsername = '游客'
 
   useEffect(() => {
